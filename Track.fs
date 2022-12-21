@@ -10,7 +10,7 @@ type Track(time: Time, production: Production, resources: Resources, build:Optio
     member this.LastBuild = lastBuild
     member this.lastResources = lastRes 
     
-    member this.Tick(newBuild: Option<Robot>) = 
+    member this.Tick(newBuild: Option<Robot>) =
         let time = time.Tick ()
         let prevResources = resources 
         let resources = resources.Add production

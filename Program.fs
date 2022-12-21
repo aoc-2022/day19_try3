@@ -7,4 +7,4 @@ let input = Input.read "/tmp/aoc/input.19.t"
 
 input |> List.map (printfn "%A")
 
-solve (Time.init 18) input[0] 
+solve (Time.init 12) input[0] 

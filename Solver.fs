@@ -9,10 +9,10 @@ let solve (initTime:Time) (bluePrint: BluePrint) =
     let preCalced = PreCalced(bluePrint)
     let rec solve (track:Track) (cache:Cache) =
         if CutOffs.shouldAbort track cache preCalced then
-            // printfn $"ABORT: {track} {cache}"
-            cache
+            cache.Register track // just to include this result
         else
-            printfn $"solve: {track} {cache}"
+            let cache : Cache = cache.Register track
+            // printfn $"solve: {track} {cache}"
             let rec descend (robotOptions:Option<Robot> list) (cache: Cache) : Cache =
                 match robotOptions with
                 | [] -> cache
@@ -21,7 +21,7 @@ let solve (initTime:Time) (bluePrint: BluePrint) =
                     let cache = solve track cache 
                     descend left cache 
             descend preCalced.RobotOptions cache 
-    solve (Track.initial initTime) Cache.empty
+    solve (Track.initial initTime) (Cache.init preCalced)
          
         
     
