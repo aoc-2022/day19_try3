@@ -12,7 +12,8 @@ let solve (initTime:Time) (bluePrint: BluePrint) =
             cache.Register track // just to include this result
         else
             let cache : Cache = cache.Register track
-            // printfn $"solve: {track} {cache}"
+            if track.Time.Left < -4 then
+                printfn $"solve: {track} {cache}"
             let rec descend (robotOptions:Option<Robot> list) (cache: Cache) : Cache =
                 match robotOptions with
                 | [] -> cache

@@ -30,18 +30,25 @@ type CutOff(track: Track, cache: Cache, preCalculed: PreCalced) =
             lacksResourcesFor robot track.lastResources |> not
     // could have built it last round
     member this.OverProduction() =
-        if track.Production.Ore > preCalculed.MaxNeeded Ore then
+        let maxOre = preCalculed.MaxNeeded Ore
+        let ore = track.Resources.Ore 
+        let maxClay = preCalculed.MaxNeeded Clay
+        let clay = track.Resources.Clay 
+        let maxObs = preCalculed.MaxNeeded Obsidian
+        let obs = track.Resources.Obs
+        let t = track.Time.Left+2 
+        if track.Production.Ore + ((ore - maxOre) / t)  > maxOre then 
             true
-        elif track.Production.Clay > preCalculed.MaxNeeded Clay then
+        elif track.Production.Clay + ((clay - maxClay) / t) > maxClay  then
             true
-        elif track.Production.Obs > preCalculed.MaxNeeded Obsidian then
+        elif track.Production.Obs + ((obs - maxObs) / t)> maxObs then
             true
         else
             false
-
+    
     member this.SeenBetter() =
         if cache.isWorse track then
-            printfn "Seen better"
+            // printfn "Seen better"
             true
         else
             false
