@@ -3,6 +3,7 @@ module day19_try3.PreCalced
 open day19_try3.Base
 
 type PreCalced(bluePrint: BluePrint) =
+    member this.BluePrint = bluePrint
     member this.MaxNeeded (material:Material) =
         match material with
         | Ore -> [bluePrint.Clay.Cost.Ore;bluePrint.Obsidian.Cost.Ore;bluePrint.Geode.Cost.Ore] |> List.max

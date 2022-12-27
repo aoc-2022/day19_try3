@@ -9,6 +9,7 @@ open day19_try3.PreCalced
 type CutOff(track: Track, cache: Cache, preCalculed: PreCalced) =
 
     let lacksResourcesFor (robot: Robot) (resources: Resources) =
+        // printfn $"lacksResourcesFor {robot} {resources}"
         match robot.Material with
         | Ore -> robot.Cost.Ore > resources.Ore
         | Clay -> robot.Cost.Ore > resources.Ore
@@ -31,21 +32,31 @@ type CutOff(track: Track, cache: Cache, preCalculed: PreCalced) =
     // could have built it last round
     member this.OverProduction() =
         let maxOre = preCalculed.MaxNeeded Ore
-        let ore = track.Resources.Ore 
+        let ore = track.Resources.Ore
         let maxClay = preCalculed.MaxNeeded Clay
-        let clay = track.Resources.Clay 
+        let clay = track.Resources.Clay
         let maxObs = preCalculed.MaxNeeded Obsidian
         let obs = track.Resources.Obs
-        let t = track.Time.Left+2 
-        if track.Production.Ore + ((ore - maxOre) / t)  > maxOre then 
+        let t = track.Time.Left + 2
+
+        if
+            track.Production.Ore + ((ore - maxOre) / t) >= maxOre
+            && track.Build = Some(preCalculed.BluePrint.Ore)
+        then
             true
-        elif track.Production.Clay + ((clay - maxClay) / t) > maxClay  then
+        elif
+            track.Production.Clay + ((clay - maxClay) / t) >= maxClay
+            && track.Build = Some(preCalculed.BluePrint.Clay)
+        then
             true
-        elif track.Production.Obs + ((obs - maxObs) / t)> maxObs then
+        elif
+            track.Production.Obs + ((obs - maxObs) / t) >= maxObs
+            && track.Build = Some(preCalculed.BluePrint.Obsidian)
+        then
             true
         else
             false
-    
+
     member this.SeenBetter() =
         if cache.isWorse track then
             // printfn "Seen better"
@@ -68,10 +79,23 @@ type CutOff(track: Track, cache: Cache, preCalculed: PreCalced) =
 let shouldAbort (track: Track) (cache: Cache) (preCalculated: PreCalced) : bool =
     let cutOff = CutOff(track, cache, preCalculated)
 
-    if cutOff.OutOfTime then true
-    elif cutOff.CantBuild() then true
-    elif cutOff.CouldHaveBuiltButSlept() then true
-    elif cutOff.OverProduction() then true
-    elif cutOff.CouldHaveBuiltAny() then true
-    elif cutOff.SeenBetter() then true
-    else false
+    if cutOff.OutOfTime then
+        // printfn "OUT OF TIME"
+        true
+    elif cutOff.CantBuild() then
+        // printfn "CANT BUILD"
+        true
+    elif cutOff.CouldHaveBuiltButSlept() then
+        // printfn "COULD HAVE BUILT PREV STEP"
+        true
+    elif cutOff.OverProduction() then
+        // printfn "OVER PRODUCTION"
+        true
+    elif cutOff.CouldHaveBuiltAny() then
+        // printfn "COULD HAVE BUILT ANY"
+        true
+    elif cutOff.SeenBetter() then
+        // printfn "SEEN BETTER"
+        true
+    else
+        false

@@ -5,10 +5,11 @@ open day19_try3.Track
 open day19_try3.PreCalced
 
 type Cache(cache: Map<int * Option<Material>, Production * Resources>, preCalced: PreCalced, best: int) =
+    
     let cut (production: Production) (resources: Resources) (pre: PreCalced) : Resources =
         let maxOre = pre.MaxNeeded Ore
         let maxClay = pre.MaxNeeded Clay
-        let maxObs = pre.MaxNeeded Obsidian
+        let maxObs = pre.MaxNeeded Obsidian      
 
         let ore =
             if production.Ore < maxOre || resources.Ore < maxOre then
@@ -29,6 +30,7 @@ type Cache(cache: Map<int * Option<Material>, Production * Resources>, preCalced
                 maxObs
 
         Resources(ore, clay, obs, resources.Geo)
+    member this.Best = best 
 
     member this.Register(track: Track) =
         let newGeoMax = track.Resources.Geo + (track.Production.Geo * track.Time.Left)
